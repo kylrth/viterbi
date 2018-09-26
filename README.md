@@ -2,8 +2,6 @@
 
 When data is sent over a channel, there will always be noise. If care is not taken to protect data, errors could be produced and data could be corrupted. One of the most effective ways of encoding data so that errors can be corrected is by using [convolutional codes](https://en.wikipedia.org/wiki/Convolutional_code).
 
-Often, noise on a channel follows a Gaussian distribution. A [binary symmetric channel](https://en.wikipedia.org/wiki/Binary_symmetric_channel) (BSC) is a channel model that performs similarly in simulation, but is less computationally expensive. In this simulation, we use a BSC to simulate a bit flipping with constant probability.
-
 The convolutional code used here can be represented by the following matrix:
 
 ```text
@@ -14,7 +12,7 @@ Since the simulation time increases exponentially with SNR, a graph of the proba
 
 ## Hard- and Soft-Decision decoding
 
-In this simulation, both hard- and soft-decision Viterbi decoding are tested. In the hard-decision version, errors are counted as the number of mismatched entries in the decoded tuple. Here is the distance method used by the hard-decision class in this repository:
+In this simulation, both hard- and soft-decision Viterbi decoding are tested. Often, noise on a channel follows a Gaussian distribution. In the hard-decision version, simulating with a [binary symmetric channel](https://en.wikipedia.org/wiki/Binary_symmetric_channel) (BSC) is equivalent to simulating with Gaussian noise because errors are counted as the number of mismatched entries in the decoded tuple. Here is the distance method used by the hard-decision class in this repository:
 
 ```python
 def dist(self, one, two):
@@ -24,7 +22,7 @@ def dist(self, one, two):
     return sum((one[0] != two[0], one[1] != two[1]))
 ```
 
-Essentially, the hard-decision form measures error using the L1-norm. The soft-decision form uses the L2-norm:
+Essentially, the hard-decision form measures error using the L1-norm. The soft-decision form uses the L2-norm, which requires us to use the Gaussian channel model in simulation:
 ```python
 def dist(self, one, two):
     """ Calculates the "distance" from `one` to `two` using the 2-norm.
